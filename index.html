@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="control-panel">
+        <div class="size-buttons" id="sizeContainer">
+            <button class="size-button" data-size="5">5</button>
+            <button class="size-button" data-size="7">7</button>
+            <button class="size-button" data-size="9">9</button>
+            <button class="size-button" data-size="11">11</button>
+            <button class="size-button" data-size="13">13</button>
+            <button class="size-button" data-size="15">15</button>
+            <button class="size-button" data-size="17">17</button>
+            <button class="size-button" data-size="19">19</button>
+            <button class="size-button" data-size="21">21</button>
+            <button class="size-button" data-size="23">23</button>
+            <span class="more-btn">...</span>
+        </div>
+        
+        <div class="shape-buttons" id="shapeContainer">
+            <button class="shape-button" data-shape="DrawLine">Line</button>
+            <button class="shape-button" data-shape="DrawStripedLine">Striped Line</button>
+            <button class="shape-button" data-shape="DrawParallelogram">Parallelogram</button>
+            <button class="shape-button" data-shape="DrawTriangle">Triangle</button>
+            <button class="shape-button" data-shape="DrawReverseTriangle">ReverseTriangle</button>
+        </div>
+        
+        <div id="controls">
+            <button id="moreShapesBtn" style="margin-bottom: 20px;">More Shapes</button>
+        </div>
+        
+        <pre id="output"></pre>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

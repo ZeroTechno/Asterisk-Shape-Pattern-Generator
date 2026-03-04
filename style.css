@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    background-color: #f8f8f8;
+}
+
+.control-panel {
+    margin: 20px auto;
+    max-width: 900px;
+}
+
+.size-buttons, .shape-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.size-button, .shape-button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    min-width: 40px;
+    transition: all 0.2s;
+}
+
+.size-button:hover, .shape-button:hover {
+    background-color: #f0f0f0;
+}
+
+.size-button.selected, .shape-button.selected {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+.shape-button {
+    min-width: 80px;
+    padding: 10px 20px;
+}
+
+pre {
+    font-size: 16px;
+    line-height: 1.2;
+    display: inline-block;
+    text-align: left;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.more-btn {
+    font-size: 18px;
+    margin-left: 10px;
+    color: #555;
+    cursor: pointer;
+}
+
+#controls {
+    margin-top: 30px;
+}
