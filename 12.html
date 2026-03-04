@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f8f8f8;
+        }
+        
+        .control-panel {
+            margin: 20px auto;
+            max-width: 900px;
+        }
+        
+        .size-buttons, .shape-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .size-button, .shape-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            min-width: 40px;
+            transition: all 0.2s;
+        }
+        
+        .size-button:hover, .shape-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .size-button.selected, .shape-button.selected {
+            background-color: #e0e0e0;
+            border-color: #999;
+        }
+        
+        .shape-button {
+            min-width: 80px;
+            padding: 10px 20px;
+        }
+        
+        pre {
+            font-size: 16px;
+            line-height: 1.2;
+            display: inline-block;
+            text-align: left;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        
+        .more-btn {
+            font-size: 18px;
+            margin-left: 10px;
+            color: #555;
+            cursor: pointer;
+        }
+        
+        #controls {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <div class="size-buttons" id="sizeContainer">
+            <button class="size-button" data-size="5">5</button>
+            <button class="size-button" data-size="7">7</button>
+            <button class="size-button" data-size="9">9</button>
+            <button class="size-button" data-size="11">11</button>
+            <button class="size-button" data-size="13">13</button>
+            <button class="size-button" data-size="15">15</button>
+            <button class="size-button" data-size="17">17</button>
+            <button class="size-button" data-size="19">19</button>
+            <button class="size-button" data-size="21">21</button>
+            <button class="size-button" data-size="23">23</button>
+            <span class="more-btn">...</span>
+        </div>
+        
+        <div class="shape-buttons" id="shapeContainer">
+            <button class="shape-button" data-shape="DrawLine">Line</button>
+            <button class="shape-button" data-shape="DrawStripedLine">Striped Line</button>
+            <button class="shape-button" data-shape="DrawParallelogram">Parallelogram</button>
+            <button class="shape-button" data-shape="DrawTriangle">Triangle</button>
+            <button class="shape-button" data-shape="DrawReverseTriangle">ReverseTriangle</button>
+        </div>
+        
+        <div id="controls">
+            <button id="moreShapesBtn" style="margin-bottom: 20px;">More Shapes</button>
+        </div>
+        
+        <pre id="output"></pre>
+    </div>
+    
+    <script>
+        let selectedSize = 5;
+        let selectedShape = "DrawLine";
+        let showingAllShapes = false;
+        
+        const allShapes = [
+            { value: "DrawLine", display: "Line" },
+            { value: "DrawStripedLine", display: "Striped Line" },
+            { value: "DrawSquare", display: "Square" },
+            { value: "DrawParallelogram", display: "Parallelogram" },
+            { value: "DrawTriangle", display: "Triangle" },
+            { value: "DrawReverseTriangle", display: "ReverseTriangle" },
+            { value: "DrawIsoscelesTriangle", display: "Isosceles Triangle" },
+            { value: "DrawReverseIsoscelesTriangle", display: "Reverse Isosceles" },
+            { value: "DrawHourGlass", display: "HourGlass" },
+            { value: "DrawDiamond", display: "Diamond" },
+            { value: "DrawZero", display: "Zero" },
+            { value: "DrawArrowUp", display: "Arrow Up" },
+            { value: "DrawArrowDown", display: "Arrow Down" },
+            { value: "DrawX", display: "X" },
+            { value: "DrawBowTie", display: "BowTie" }
+        ];
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(`.size-button[data-size="5"]`).classList.add("selected");
+            document.querySelector(`.shape-button[data-shape="DrawLine"]`).classList.add("selected");
+            
+            drawShape();
+            
+            document.getElementById("moreShapesBtn").addEventListener("click", toggleAllShapes);
+            
+            document.getElementById("sizeContainer").addEventListener("click", function(e) {
+                if (e.target.classList.contains("size-button")) {
+                    document.querySelectorAll(".size-button").forEach(btn => btn.classList.remove("selected"));
+                    e.target.classList.add("selected");
+                    selectedSize = parseInt(e.target.getAttribute("data-size"));
+                    drawShape();
+                }
+            });
+            
+            document.getElementById("shapeContainer").addEventListener("click", function(e) {
+                if (e.target.classList.contains("shape-button")) {
+                    document.querySelectorAll(".shape-button").forEach(btn => btn.classList.remove("selected"));
+                    e.target.classList.add("selected");
+                    selectedShape = e.target.getAttribute("data-shape");
+                    drawShape();
+                }
+            });
+        });
+        
+        function toggleAllShapes() {
+            const shapeContainer = document.getElementById("shapeContainer");
+            const moreShapesBtn = document.getElementById("moreShapesBtn");
+            
+            let html = '';
+            
+            if (showingAllShapes) {
+                allShapes.slice(0, 5).forEach(shape => {
+                    html += `<button class="shape-button" data-shape="${shape.value}">${shape.display}</button>`;
+                });
+                moreShapesBtn.textContent = "More Shapes";
+            } else {
+                allShapes.forEach(shape => {
+                    html += `<button class="shape-button" data-shape="${shape.value}">${shape.display}</button>`;
+                });
+                moreShapesBtn.textContent = "Less Shapes";
+            }
+            
+            shapeContainer.innerHTML = html;
+            
+            const selectedButton = document.querySelector(`.shape-button[data-shape="${selectedShape}"]`);
+            if (selectedButton) {
+                selectedButton.classList.add("selected");
+            }
+            
+            showingAllShapes = !showingAllShapes;
+        }
+        
+        function drawShape() {
+            const size = selectedSize;
+            const shape = selectedShape;
+            let output = "";
+            
+            const shapeFunctions = {
+                DrawLine: function(size) {
+                    return "*".repeat(size);
+                },
+                
+                DrawStripedLine: function(size) {
+                    let result = "";
+                    for (let i = 0; i < size; i++) {
+                        result += i % 2 === 0 ? "* " : "_ ";
+                    }
+                    return result;
+                },
+                
+                DrawSquare: function(size) {
+                    let result = "";
+                    for (let i = 0; i < size; i++) {
+                        result += "*".repeat(size) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawParallelogram: function(size) {
+                    let result = "";
+                    for (let i = 0; i < size; i++) {
+                        result += " ".repeat(size - i - 1) + "*".repeat(size) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawTriangle: function(size) {
+                    let result = "";
+                    for (let i = 1; i <= size; i++) {
+                        result += "*".repeat(i) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawReverseTriangle: function(size) {
+                    let result = "";
+                    for (let i = size; i > 0; i--) {
+                        result += "*".repeat(i) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawIsoscelesTriangle: function(size) {
+                    let result = "";
+                    for (let i = 1; i <= size; i += 2) {
+                        result += " ".repeat((size - i) / 2) + "*".repeat(i) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawReverseIsoscelesTriangle: function(size) {
+                    let result = "";
+                    for (let i = size; i > 0; i -= 2) {
+                        result += " ".repeat((size - i) / 2) + "*".repeat(i) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawHourGlass: function(size) {
+                    let result = "";
+                    for (let i = size; i > 0; i -= 2) {
+                        result += " ".repeat((size - i) / 2) + "*".repeat(i) + "\n";
+                    }
+                    for (let i = 3; i <= size; i += 2) {
+                        result += " ".repeat((size - i) / 2) + "*".repeat(i) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawDiamond: function(size) {
+                    let result = "";
+                    for (let i = 1; i <= size; i += 2) {
+                        result += " ".repeat((size - i) / 2) + "*".repeat(i) + "\n";
+                    }
+                    for (let i = size - 2; i > 0; i -= 2) {
+                        result += " ".repeat((size - i) / 2) + "*".repeat(i) + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawZero: function(size) {
+                    let result = "*".repeat(size) + "\n";
+                    for (let i = 0; i < size - 2; i++) {
+                        result += "*" + " ".repeat(size - 2) + "*\n";
+                    }
+                    result += "*".repeat(size);
+                    return result;
+                },
+                
+                DrawArrowUp: function(size) {
+                    const arrowHeadHeight = Math.ceil(size / 2);
+                    const stemHeight = size - arrowHeadHeight;
+                    const stemWidth = Math.max(1, Math.floor(size / 3));
+                    const stemPadding = Math.floor((size - stemWidth) / 2);
+                    
+                    let result = "";
+                    
+                    for (let i = 0; i < arrowHeadHeight; i++) {
+                        const stars = 2 * i + 1;
+                        const padding = Math.floor((size - stars) / 2);
+                        result += " ".repeat(padding) + "*".repeat(stars) + "\n";
+                    }
+                    
+                    const stemLine = " ".repeat(stemPadding) + "*".repeat(stemWidth) + "\n";
+                    result += stemLine.repeat(stemHeight);
+                    
+                    return result;
+                },
+                
+                DrawArrowDown: function(size) {
+                    const arrowHeadHeight = Math.ceil(size / 2);
+                    const stemHeight = size - arrowHeadHeight;
+                    const stemWidth = Math.max(1, Math.floor(size / 3));
+                    const stemPadding = Math.floor((size - stemWidth) / 2);
+                    
+                    let result = "";
+                    
+                    const stemLine = " ".repeat(stemPadding) + "*".repeat(stemWidth) + "\n";
+                    result += stemLine.repeat(stemHeight);
+                    
+                    for (let i = arrowHeadHeight - 1; i >= 0; i--) {
+                        const stars = 2 * i + 1;
+                        const padding = Math.floor((size - stars) / 2);
+                        result += " ".repeat(padding) + "*".repeat(stars) + "\n";
+                    }
+                    
+                    return result;
+                },
+                
+                DrawX: function(size) {
+                    let result = "";
+                    for (let i = 0; i < size; i++) {
+                        let line = "";
+                        for (let j = 0; j < size; j++) {
+                            if (j === i || j === (size - 1 - i)) {
+                                line += "*";
+                            } else {
+                                line += " ";
+                            }
+                        }
+                        result += line + "\n";
+                    }
+                    return result;
+                },
+                
+                DrawBowTie: function(size) {
+                    let result = "";
+                    
+                    for (let i = 0; i < Math.floor(size / 2); i++) {
+                        result += "*".repeat(i + 1) + " ".repeat(size - 2 * (i + 1)) + "*".repeat(i + 1) + "\n";
+                    }
+                    
+                    if (size % 2 !== 0) {
+                        result += "*".repeat(size) + "\n";
+                    }
+                    
+                    for (let i = Math.floor(size / 2) - 1; i >= 0; i--) {
+                        result += "*".repeat(i + 1) + " ".repeat(size - 2 * (i + 1)) + "*".repeat(i + 1) + "\n";
+                    }
+                    
+                    return result;
+                }
+            };
+            
+            if (shapeFunctions[shape]) {
+                output = shapeFunctions[shape](size);
+            }
+            
+            document.getElementById("output").textContent = output;
+        }
+    </script>
+</body>
+</html>
